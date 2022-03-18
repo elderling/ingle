@@ -1,8 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define MAX_LINE_LENGTH     256
 //#include "jtline.h"
+
 int linenr;
 unsigned num_lines;
 
@@ -19,11 +21,10 @@ typedef struct _line {
 typedef unsigned pos_t;
 
 unsigned char xpos;
-extern char linebuf[MAX_LINE_LENGTH + 1];
-extern unsigned linebuf_length;
+char linebuf[MAX_LINE_LENGTH + 1];
+unsigned linebuf_length;
 
 extern void linebuf_clear (void);
-//extern void __fastcall__ linebuf_insert_char (pos_t, char);
 extern void linebuf_insert_char (pos_t, char);
 extern void linebuf_delete_char (pos_t);
 extern void linebuf_replace_char (pos_t, char);
@@ -45,11 +46,8 @@ void                 line_join           (void);
 void                 line_clear          (void);
 void move_up (void);
 void move_down (void);
+void    adjust_xpos_to_line_length (void);
 
-line      * first_line;
-line      * current_line;
-int       linenr;
-unsigned  num_lines;
 
 line *
 line_alloc (void)
@@ -237,4 +235,20 @@ move_down (void)
         linenr = num_lines - 1;
 
     adjust_xpos_to_line_length ();
+
+}
+
+void
+adjust_xpos_to_line_length ()
+{
+    line_goto (linenr);
+
+    if (xpos >= current_line->length)
+        xpos = current_line->length ?
+            current_line->length - 1 :
+            0;
+}
+
+void main(void) {
+  printf("Beginning tests ...\n");
 }
